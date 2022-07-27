@@ -1,0 +1,209 @@
+const config = {
+    type: Phaser.AUTO,
+    parent: 'game-container',
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 }, 
+            debug: true
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+let player;
+let iceCreams;
+let bombs;
+let platform1;
+let platform2;
+let platform3;
+let movingPlatform;
+let cursors;
+let score = 0;
+let gameOver = false;
+let scoreText;
+
+const game = new Phaser.Game(config);
+
+function preload () {
+    this.load.image('desert', 'public/desert.png');
+    this.load.image('ground', 'public/desert-platform.png');
+    this.load.image('iceCream', 'public/iceCream.png');
+    this.load.image('bomb', 'public/bomb.png');
+    this.load.spritesheet('baby', 'public/naked-baby.png', { frameWidth: 45, frameHeight: 60 }); //32, 48
+};
+
+function create () {
+    //  A simple background for the game
+    this.add.image(400, 300, 'desert');
+
+    // adds the floor for the game;
+    platform1 = platform2 = platform3 = this.physics.add.staticGroup();
+    //  Here we create the ground. Scale it to fit the width of the game
+    platform1 = this.physics.add.image(530, 650, 'ground').setScale(2).refreshBody().setImmovable(true); // floor;
+    platform1.body.setSize(400, 90, true);
+    platform1.body.allowGravity = false;
+
+
+    // adds some ledges
+    platform2 = this.physics.add.image(30, 350, 'ground').setImmovable(true); // mid ledge;
+    platform2.body.setSize(275, 60, true);
+    platform2.body.allowGravity = false;
+
+    platform3 = this.physics.add.image(780, 220, 'ground').setImmovable(true); // top ledge;
+    platform3.body.setSize(545, 50, true);
+    platform3.body.allowGravity = false;
+
+    movingPlatform = this.physics.add.image(750, 470, 'ground').setImmovable(true); // bot ledge;
+
+    movingPlatform.body.setSize(420, 50, true);
+    movingPlatform.body.allowGravity = false;
+    movingPlatform.setVelocityX(50);
+
+    // The player and its settings
+    player = this.physics.add.sprite(150, 350, 'baby'); //100, 450
+    player.body.setSize(30, 46, true);
+
+    //  Player physics properties. Give the little guy a slight bounce.
+    player.setBounce(0.5);
+    player.setCollideWorldBounds(true);
+
+    //  Our player animations, turning, walking left and walking right.
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('baby', { start: 4, end: 7 }),
+        frameRate: 10, // The frame rate of playback in frames per second (default 24 if duration is null);
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'baby', frame: 0 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('baby', { start: 8, end: 11 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+
+    //  Some iceCreams to collect, 14 in total, evenly spaced 70 pixels apart along the x axis
+    iceCreams = this.physics.add.group({
+        key: 'iceCream',
+        repeat: 13,
+        setXY: { x: 12, y: 0, stepX: 58 }
+    });
+
+    iceCreams.children.iterate(function (child) {
+
+        //  Give each iceCream a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.8, 0.9)); // 0.4, 0.8
+
+    });
+
+    bombs = this.physics.add.group();
+
+    //  The score
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+    //  Collide the player and the iceCreams with the platforms
+    this.physics.add.collider(player, platform1);
+    this.physics.add.collider(player, platform2);
+    this.physics.add.collider(player, platform3);
+    this.physics.add.collider(player, movingPlatform);
+    
+    this.physics.add.collider(iceCreams, platform1);
+    this.physics.add.collider(iceCreams, platform2);
+    this.physics.add.collider(iceCreams, platform3);
+    this.physics.add.collider(iceCreams, movingPlatform);
+
+    this.physics.add.collider(bombs, platform1);
+    this.physics.add.collider(bombs, platform2);
+    this.physics.add.collider(bombs, platform3);
+    this.physics.add.collider(bombs, movingPlatform);
+
+    //  Checks to see if the player overlaps with any of the iceCreams, if he does call the collecticeCream function
+    this.physics.add.overlap(player, iceCreams, collecticeCream, null, this);
+
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+};
+
+function update () {
+    if (gameOver) {
+        return;
+    }
+
+    if (cursors.left.isDown) {
+        player.setVelocityX(-160);
+
+        player.anims.play('left', true);
+    } else if (cursors.right.isDown) {
+        player.setVelocityX(160);
+
+        player.anims.play('right', true);
+    } else {
+        player.setVelocityX(0);
+
+        player.anims.play('turn');
+    }
+
+    if (cursors.up.isDown && player.body.touching.down) {
+        player.setVelocityY(-330); // -330
+    }
+
+    if (movingPlatform.x >= 500) // 500
+    {
+        movingPlatform.setVelocityX(-90); // -50
+    }
+    else if (movingPlatform.x <= 300) // 300
+    {
+        movingPlatform.setVelocityX(90); // 50
+    }
+};
+
+function collecticeCream (player, iceCream) {
+    iceCream.disableBody(true, true);
+
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (iceCreams.countActive(true) === 0) {
+        //  A new batch of iceCreams to collect
+        iceCreams.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        const x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        const bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
+
+    }
+};
+
+function hitBomb (player, bomb) {
+    this.physics.pause();
+
+    player.setTint(0xff0000);
+
+    player.anims.play('turn');
+
+    gameOver = true;
+};
