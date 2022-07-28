@@ -1,0 +1,23 @@
+{
+  "name": "phaser-draft-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Donna-Sayos/Phaser-Draft-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Donna-Sayos/Phaser-Draft-Game/issues"
+  },
+  "homepage": "https://github.com/Donna-Sayos/Phaser-Draft-Game#readme",
+  "dependencies": {
+    "phaser": "^3.55.2"
+  }
+}
