@@ -24,6 +24,8 @@ const config = {
     }
 };
 
+const game = new Phaser.Game(config);
+
 let player;
 let iceCreams;
 let poops;
@@ -36,9 +38,7 @@ let score = 0;
 let gameOver = false;
 let scoreText;
 
-const game = new Phaser.Game(config);
-
-function preload () {
+function preload () { // where to load images or sounds;
     this.load.image('desert', 'public/desert.png');
     this.load.image('ground', 'public/desert-platform.png');
     this.load.image('iceCream', 'public/iceCream.png');
@@ -46,7 +46,7 @@ function preload () {
     this.load.spritesheet('baby', 'public/naked-baby.png', { frameWidth: 50, frameHeight: 67 }); // 51, 65
 };
 
-function create () {
+function create () { // where to define objects;
     //  A simple background for the game
     this.add.image(400, 300, 'desert');
 
@@ -60,16 +60,16 @@ function create () {
 
     // adds some ledges
     platform2 = this.physics.add.image(100, 350, 'ground').setImmovable(true); // mid ledge;
-    platform2.body.setSize(275, 60, true);
+    platform2.body.setSize(275, 30, true);
     platform2.body.allowGravity = false;
 
     movingPlatform1 = this.physics.add.image(650, 470, 'ground').setImmovable(true); // bot ledge;
-    movingPlatform1.body.setSize(420, 50, true);
+    movingPlatform1.body.setSize(420, 30, true);
     movingPlatform1.body.allowGravity = false;
     movingPlatform1.setVelocityX(50);
 
     movingPlatform2 = this.physics.add.image(780, 220, 'ground').setImmovable(true); // top ledge;
-    movingPlatform2.body.setSize(545, 50, true);
+    movingPlatform2.body.setSize(545, 30, true);
     movingPlatform2.body.allowGravity = false;
     movingPlatform2.setVelocityY(50);
 
@@ -123,7 +123,7 @@ function create () {
     poops = this.physics.add.group();
 
     //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Collide the player and the iceCreams with the platforms
     this.physics.add.collider(player, platform1);
@@ -147,7 +147,7 @@ function create () {
     this.physics.add.collider(player, poops, hitpoop, null, this);
 };
 
-function update () {
+function update () { // where the loop goes;
     if (gameOver) {
         return;
     }
@@ -200,7 +200,7 @@ function collecticeCream (player, iceCream) {
 
             let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-        let poop = poops.create(x, 16, 'poop');
+        let poop = poops.create(x, 20, 'poop'); // 16
         poop.setBounce(1);
         poop.setCollideWorldBounds(true);
         poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
@@ -212,7 +212,7 @@ function collecticeCream (player, iceCream) {
 function hitpoop (player, poop) {
     this.physics.pause();
 
-    player.setTint(0xff0000);
+    player.setTint(0xff0000); // gives the player a red tint when hit;
 
     player.anims.play('turn');
 
