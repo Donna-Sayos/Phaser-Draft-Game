@@ -2,6 +2,8 @@ import DesertScene from "./scenes/DesertScene.js";
 
 const config = {
     type: Phaser.AUTO,
+    pixelArt: true,
+    title: 'Survive Deeznuts',
     scale: {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_BOTH,

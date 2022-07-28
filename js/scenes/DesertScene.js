@@ -16,11 +16,11 @@ export default class DesertScene extends Phaser.Scene {
     }
 
     preload () { // where to load images or sounds;
-        this.load.image('desert', 'public/desert.png');
-        this.load.image('ground', 'public/desert-platform.png');
-        this.load.image('iceCream', 'public/iceCream.png');
-        this.load.image('poop', 'public/poop.png');
-        this.load.spritesheet('baby', 'public/naked-baby.png', { frameWidth: 50, frameHeight: 67 }); // 51, 65
+        this.load.image('desert', 'public/assets/bg/desert.png');
+        this.load.image('ground', 'public/assets/tiles/desert-platform.png');
+        this.load.image('iceCream', 'public/assets/objects/iceCream.png');
+        this.load.image('poop', '/public/assets/objects/poop.png');
+        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 }); // 51, 65
     }
 
     create () { // where to define objects;
