@@ -1,4 +1,5 @@
 import DesertScene from "./scenes/DesertScene.js";
+import StartScene from "./scenes/StartScene.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +19,10 @@ const config = {
             debug: true,
         },
     },
-    scene: [ DesertScene ]
+    scene: [
+        StartScene,
+        DesertScene
+    ]
 };
 
 const game = new Phaser.Game(config);
