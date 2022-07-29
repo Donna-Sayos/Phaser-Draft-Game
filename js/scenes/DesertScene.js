@@ -24,14 +24,15 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
         this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
+        this.load.audio('pickup-audio', 'public/assets/audio/pickup.mp3');
     }
 
     create () { // where to define objects;
+
         //  A simple background for the game
         this.add.image(0, 0, 'desert').setOrigin(0, 0);
     
         // adds the floor for the game;
-        // platform1 = platform2 = movingPlatform1 = movingPlatform2 = this.physics.add.staticGroup();
         //  Here we create the ground. Scale it to fit the width of the game
         platform1 = this.physics.add.image(530, 650, 'ground').setScale(2).refreshBody().setImmovable(true);
         platform1.body.setSize(400, 60).setOffset(35, 110); // .setSize adjusts the size of the bounding box; .setOffset adjusts the location of the bounding box;
@@ -54,7 +55,7 @@ export default class DesertScene extends Phaser.Scene {
         movingPlatform2.setVelocityY(50);
     
         // The player and its settings
-        gameState.player = this.physics.add.sprite(150, 350, 'baby'); // 150, 350
+        gameState.player = this.physics.add.sprite(150, 350, 'baby');
         gameState.player.body.setSize(30, 35).setOffset(10, 25);
     
         //  gameState.Player physics properties. Give the little guy a slight bounce.
@@ -82,7 +83,8 @@ export default class DesertScene extends Phaser.Scene {
             repeat: -1
         });
 
-        
+        // sounds
+        this.pickUpSound = this.sound.add("pickup-audio");
     
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
@@ -164,12 +166,14 @@ export default class DesertScene extends Phaser.Scene {
 
     collecticeCream = (player, iceCream) => {
         iceCream.disableBody(true, true);
+
+        this.pickUpSound.play();
     
         //  Add and update the score
         gameState.score += 20;
         gameState.scoreText.setText(`score: ${gameState.score}`);
     
-        if (iceCreams.countActive(true) === 8) {
+        if (iceCreams.countActive(true) === 6) {
             //  A new batch of iceCreams to collect
             iceCreams.children.iterate(function (child) {
     
@@ -179,7 +183,7 @@ export default class DesertScene extends Phaser.Scene {
     
                 let x = (gameState.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
     
-            let poop = poops.create(x, 20, 'poop'); // 16
+            let poop = poops.create(x, 20, 'poop'); 
             poop.setBounce(1);
             poop.setSize(25, 23).setOffset(12, 15);
             poop.setCollideWorldBounds(true);
