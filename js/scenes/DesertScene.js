@@ -9,6 +9,9 @@ let cursors;
 let score = 0;
 let gameOver = false;
 let scoreText;
+const gameState = {
+    score: 0
+}
 
 export default class DesertScene extends Phaser.Scene {
     constructor () {
@@ -18,6 +21,7 @@ export default class DesertScene extends Phaser.Scene {
     preload () { // where to load images or sounds;
         this.load.image('desert', 'public/assets/bg/desert.png');
         this.load.image('ground', 'public/assets/tiles/desert-platform.png');
+        this.load.image('mini', 'public/assets/tiles/mini-platform.png');
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
         this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
@@ -25,40 +29,40 @@ export default class DesertScene extends Phaser.Scene {
 
     create () { // where to define objects;
         //  A simple background for the game
-        this.add.image(400, 300, 'desert');
+        this.add.image(0, 0, 'desert').setOrigin(0, 0);
     
         // adds the floor for the game;
-        platform1 = platform2 = movingPlatform2 = this.physics.add.staticGroup();
+        // platform1 = platform2 = movingPlatform1 = movingPlatform2 = this.physics.add.staticGroup();
         //  Here we create the ground. Scale it to fit the width of the game
-        platform1 = this.physics.add.image(530, 650, 'ground').setScale(2).refreshBody().setImmovable(true); // floor;
-        platform1.body.setSize(530, 88, true);
+        platform1 = this.physics.add.image(530, 650, 'ground').setScale(2).refreshBody().setImmovable(true);
+        platform1.body.setSize(400, 60).setOffset(35, 110); // .setSize adjusts the size of the bounding box; .setOffset adjusts the location of the bounding box;
         platform1.body.allowGravity = false;
     
     
         // adds some ledges
         platform2 = this.physics.add.image(100, 350, 'ground').setImmovable(true); // mid ledge;
-        platform2.body.setSize(275, 30, true);
+        platform2.body.setSize(275, 30).setOffset(160, 110);
         platform2.body.allowGravity = false;
     
-        movingPlatform1 = this.physics.add.image(650, 470, 'ground').setImmovable(true); // bot ledge;
-        movingPlatform1.body.setSize(420, 30, true);
+        movingPlatform1 = this.physics.add.image(650, 470, 'mini').setImmovable(true); // bot ledge;
+        movingPlatform1.body.setSize(150, 40).setOffset(150, 194);
         movingPlatform1.body.allowGravity = false;
         movingPlatform1.setVelocityX(50);
     
         movingPlatform2 = this.physics.add.image(780, 220, 'ground').setImmovable(true); // top ledge;
-        movingPlatform2.body.setSize(545, 30, true);
+        movingPlatform2.body.setSize(300, 30).setOffset(24, 110);
         movingPlatform2.body.allowGravity = false;
         movingPlatform2.setVelocityY(50);
     
         // The player and its settings
-        player = this.physics.add.sprite(150, 350, 'baby'); //100, 450 || 150, 350
-        player.body.setSize(35, 51, true);
+        gameState.player = this.physics.add.sprite(150, 350, 'baby'); // 150, 350
+        gameState.player.body.setSize(30, 35).setOffset(10, 25);
     
-        //  Player physics properties. Give the little guy a slight bounce.
-        player.setBounce(0.5);
-        player.setCollideWorldBounds(true);
+        //  gameState.Player physics properties. Give the little guy a slight bounce.
+        gameState.player.setBounce(0.5);
+        gameState.player.setCollideWorldBounds(true);
     
-        // player animations, turning, walking left and walking right.
+        // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('baby', { start: 4, end: 7 }),
@@ -89,24 +93,25 @@ export default class DesertScene extends Phaser.Scene {
             repeat: 13,
             setXY: { x: 12, y: 0, stepX: 58 }
         });
+        
     
         iceCreams.children.iterate(function (child) {
     
             //  Give each iceCream a slightly different bounce
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)); // 0.4, 0.8
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6)); 
     
         });
     
         poops = this.physics.add.group();
     
         //  The score
-        scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '32px', fill: '#000' });
+        gameState.scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '32px', fill: '#000' });
     
-        //  Collide the player and the iceCreams with the platforms
-        this.physics.add.collider(player, platform1);
-        this.physics.add.collider(player, platform2);
-        this.physics.add.collider(player, movingPlatform1);
-        this.physics.add.collider(player, movingPlatform2);
+        //  Collide the gameState.player and the iceCreams with the platforms
+        this.physics.add.collider(gameState.player, platform1);
+        this.physics.add.collider(gameState.player, platform2);
+        this.physics.add.collider(gameState.player, movingPlatform1);
+        this.physics.add.collider(gameState.player, movingPlatform2);
         
         this.physics.add.collider(iceCreams, platform1);
         this.physics.add.collider(iceCreams, platform2);
@@ -118,39 +123,39 @@ export default class DesertScene extends Phaser.Scene {
         this.physics.add.collider(poops, movingPlatform1);
         this.physics.add.collider(poops, movingPlatform2);
     
-        //  Checks to see if the player overlaps with any of the iceCreams, if he does call the collecticeCream function
-        this.physics.add.overlap(player, iceCreams, this.collecticeCream, null, this);
+        //  Checks to see if the gameState.player overlaps with any of the iceCreams, if he does call the collecticeCream function
+        this.physics.add.overlap(gameState.player, iceCreams, this.collecticeCream, null, this);
     
-        this.physics.add.collider(player, poops, this.hitpoop, null, this);
+        this.physics.add.collider(gameState.player, poops, this.hitpoop, null, this);
     }
 
-    update () { // where the loop goes;
-        if (gameOver) {
-            return;
-        }
-    
+    // onClicked = () => {
+    //     this.scene.start("DesertScene");
+    // }
+
+    update () { // where the loop goes; 
         if (cursors.left.isDown) {
-            player.setVelocityX(-160);
+            gameState.player.setVelocityX(-160);
     
-            player.anims.play('left', true);
+            gameState.player.anims.play('left', true);
         } else if (cursors.right.isDown) {
-            player.setVelocityX(160);
+            gameState.player.setVelocityX(160);
     
-            player.anims.play('right', true);
+            gameState.player.anims.play('right', true);
         } else {
-            player.setVelocityX(0);
+            gameState.player.setVelocityX(0);
     
-            player.anims.play('turn');
+            gameState.player.anims.play('turn');
         }
     
-        if (cursors.up.isDown && player.body.touching.down) {
-            player.setVelocityY(-360); // -330
+        if (cursors.up.isDown && gameState.player.body.touching.down) {
+            gameState.player.setVelocityY(-360); 
         }
     
-        if (movingPlatform1.x >= 500) {
-            movingPlatform1.setVelocityX(-90); 
+        if (movingPlatform1.x >= 700) {
+            movingPlatform1.setVelocityX(-100); 
         } else if (movingPlatform1.x <= 300) {
-            movingPlatform1.setVelocityX(90); 
+            movingPlatform1.setVelocityX(100);
         }
     
         if (movingPlatform2.y >= 300) {
@@ -164,10 +169,10 @@ export default class DesertScene extends Phaser.Scene {
         iceCream.disableBody(true, true);
     
         //  Add and update the score
-        score += 20;
-        scoreText.setText('Score: ' + score);
+        gameState.score += 20;
+        gameState.scoreText.setText(`score: ${gameState.score}`);
     
-        if (iceCreams.countActive(true) === 1) {
+        if (iceCreams.countActive(true) === 8) {
             //  A new batch of iceCreams to collect
             iceCreams.children.iterate(function (child) {
     
@@ -175,10 +180,11 @@ export default class DesertScene extends Phaser.Scene {
     
             });
     
-                let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+                let x = (gameState.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
     
             let poop = poops.create(x, 20, 'poop'); // 16
             poop.setBounce(1);
+            poop.setSize(25, 23).setOffset(12, 15);
             poop.setCollideWorldBounds(true);
             poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
             poop.allowGravity = false;
@@ -189,9 +195,16 @@ export default class DesertScene extends Phaser.Scene {
     hitpoop = (player, poop) => {
         this.physics.pause();
     
-        player.setTint(0xff0000); // gives the player a red tint when hit;
-    
-        player.anims.play('turn');
+        gameState.player.setTint(0xff0000); // gives the gameState.player a red tint when hit;
+        this.add.text(this.game.renderer.width / 2.5, this.game.renderer.height * 0.20, 'Game Over', { font: '30px monospace', fill: '#000000' });
+        this.add.text(this.game.renderer.width / 2.5, this.game.renderer.height * 0.40, 'Click to restart', { font: '20px monospace', fill: '#000000' });
+
+        this.input.on("pointerup", () => {
+            gameState.score = 0;
+            this.scene.restart();
+        });
+
+        gameState.player.anims.play('turn');
     
         gameOver = true;
     }

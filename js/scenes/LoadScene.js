@@ -53,11 +53,11 @@ export default class LoadScene extends Phaser.Scene {
             y: height / 2 + 50,
             text: '',
             style: {
-                font: 'monospace',
+                font: '20px monospace',
                 fill: "#ffffff"
             }
         });
-        assetsText.setOrigin(0.5, -4);
+        assetsText.setOrigin(0.5, -2);
 
         let loadingBar = this.add.graphics();
         let loadingBox = this.add.graphics();
@@ -97,7 +97,7 @@ export default class LoadScene extends Phaser.Scene {
         let lol = this.add.image(400, 300, 'lol');
         setTimeout(() => {
             this.scene.start("StartScene");
-        }, 1500);
+        }, 800);
     }
 };
 
