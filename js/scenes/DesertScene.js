@@ -1,6 +1,7 @@
 let player;
 let iceCreams;
 let poops;
+let portal;
 let platform1;
 let platform2;
 let movingPlatform1;
@@ -23,8 +24,10 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('mini', 'public/assets/tiles/mini-platform.png');
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
+        this.load.image('portal', 'public/assets/objects/portal.png');
         this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
         this.load.audio('pickup-audio', 'public/assets/audio/pickup.mp3');
+        this.load.audio('explosion-audio', 'public/assets/audio/explosion.mp3');
     }
 
     create () { // where to define objects;
@@ -85,6 +88,7 @@ export default class DesertScene extends Phaser.Scene {
 
         // sounds
         this.pickUpSound = this.sound.add("pickup-audio");
+        this.explosionSound = this.sound.add("explosion-audio");
     
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
@@ -106,6 +110,7 @@ export default class DesertScene extends Phaser.Scene {
         });
     
         poops = this.physics.add.group();
+        portal = this.physics.add.group();
     
         //  The score
         gameState.scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -194,6 +199,8 @@ export default class DesertScene extends Phaser.Scene {
     }
 
     hitpoop = (player, poop) => {
+        this.explosionSound.play();
+
         this.physics.pause();
     
         gameState.player.setTint(0xff0000); // gives the gameState.player a red tint when hit;
