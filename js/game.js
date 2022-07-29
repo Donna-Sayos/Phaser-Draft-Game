@@ -21,8 +21,8 @@ const config = {
         },
     },
     scene: [
-        LoadScene,
-        StartScene,
+        // LoadScene,
+        // StartScene,
         DesertScene
     ]
 };

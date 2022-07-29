@@ -6,7 +6,6 @@ let platform2;
 let movingPlatform1;
 let movingPlatform2;
 let cursors;
-let score = 0;
 let gameOver = false;
 let scoreText;
 const gameState = {
@@ -82,6 +81,8 @@ export default class DesertScene extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+
+        
     
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
@@ -128,10 +129,6 @@ export default class DesertScene extends Phaser.Scene {
     
         this.physics.add.collider(gameState.player, poops, this.hitpoop, null, this);
     }
-
-    // onClicked = () => {
-    //     this.scene.start("DesertScene");
-    // }
 
     update () { // where the loop goes; 
         if (cursors.left.isDown) {
