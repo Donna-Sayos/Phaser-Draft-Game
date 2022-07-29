@@ -15,7 +15,11 @@ export default class StartScene extends Phaser.Scene {
     }
 
     create () {
-        this.add.image(0, 0, 'background').setOrigin(0).setDepth(0);
+        this.cameras.main.fadeFrom(2000, Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255));
+
+        this.add.image(0, 0, 'background').setOrigin(0);
+
+        this.add.text(this.game.renderer.width / 3.7, this.game.renderer.height * 0.20, 'Play with me 😏', { font: '50px monospace', fill: '#ffffff' });
 
         let player = this.physics.add.sprite(150, 350, 'baby').setCollideWorldBounds(true);
         player.body.allowGravity = false;
