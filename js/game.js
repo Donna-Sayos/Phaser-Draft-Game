@@ -1,4 +1,5 @@
 import DesertScene from "./scenes/DesertScene.js";
+import LoadScene from "./scenes/loadScene.js";
 import StartScene from "./scenes/StartScene.js";
 
 const config = {
@@ -8,7 +9,7 @@ const config = {
     scale: {
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        zoom: 1.5
+        zoom: 1
     },
     width: 800,
     height: 600,
@@ -20,6 +21,7 @@ const config = {
         },
     },
     scene: [
+        LoadScene,
         StartScene,
         DesertScene
     ]

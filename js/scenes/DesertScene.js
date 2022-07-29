@@ -20,7 +20,7 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('ground', 'public/assets/tiles/desert-platform.png');
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
-        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 }); // 51, 65
+        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
     }
 
     create () { // where to define objects;
@@ -58,7 +58,7 @@ export default class DesertScene extends Phaser.Scene {
         player.setBounce(0.5);
         player.setCollideWorldBounds(true);
     
-        //  Our player animations, turning, walking left and walking right.
+        // player animations, turning, walking left and walking right.
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('baby', { start: 4, end: 7 }),
