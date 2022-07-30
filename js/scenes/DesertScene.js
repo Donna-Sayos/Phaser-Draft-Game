@@ -1,7 +1,7 @@
 let player;
 let iceCreams;
 let poops;
-let portal;
+let portals;
 let platform1;
 let platform2;
 let movingPlatform1;
@@ -74,14 +74,11 @@ export default class DesertScene extends Phaser.Scene {
         movingPlatform4.body.allowGravity = false;
         movingPlatform4.setVelocityY(50);
 
-        stoneBlockA = this.physics.add.image(650, this.game.renderer.height - 150, 'stone-block').setImmovable(true); // mid;
-        stoneBlockA.body.allowGravity = false;
+        stoneBlockA = this.physics.add.staticGroup();
 
-        stoneBlockB = this.physics.add.image(730, this.game.renderer.height - 400, 'stone-block').setImmovable(true); // right;
-        stoneBlockB.body.allowGravity = false;
-
-        stoneBlockC = this.physics.add.image(150, this.game.renderer.height - 300, 'stone-block').setImmovable(true); // left;
-        stoneBlockC.body.allowGravity = false;
+        stoneBlockA.create(650, this.game.renderer.height - 150, 'stone-block'); // mid;
+        stoneBlockA.create(730, this.game.renderer.height - 400, 'stone-block'); // right;
+        stoneBlockA.create(150, this.game.renderer.height - 300, 'stone-block'); // left;
 
         stoneBlock = this.physics.add.image(70, this.game.renderer.height - 150, 'stone-block').setImmovable(true); // moving stone block;
         stoneBlock.body.allowGravity = false;
@@ -109,8 +106,8 @@ export default class DesertScene extends Phaser.Scene {
         gameState.player.setCollideWorldBounds(true);
 
         // to have the camera focus on the player;
-        this.cameras.main.startFollow(gameState.player); // .09, .09
-        this.cameras.main.setZoom(1);
+        // this.cameras.main.startFollow(gameState.player); // .09, .09
+        // this.cameras.main.setZoom(1);
     
         // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
@@ -156,19 +153,16 @@ export default class DesertScene extends Phaser.Scene {
         });
     
         poops = this.physics.add.group();
-        portal = this.physics.add.group();
+        portals = this.physics.add.group();
     
         //  The score
         gameState.scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '40px', fill: '#000' });
-       
-    
+           
         //  Collide the gameState.player and the iceCreams with the platforms
         this.physics.add.collider(gameState.player, platform1);
         this.physics.add.collider(gameState.player, platform2);
         this.physics.add.collider(gameState.player, stoneBlock);
         this.physics.add.collider(gameState.player, stoneBlockA);
-        this.physics.add.collider(gameState.player, stoneBlockB);
-        this.physics.add.collider(gameState.player, stoneBlockC);
         this.physics.add.collider(gameState.player, movingPlatform1);
         this.physics.add.collider(gameState.player, movingPlatform2);
         this.physics.add.collider(gameState.player, movingPlatform3);
@@ -178,19 +172,18 @@ export default class DesertScene extends Phaser.Scene {
         this.physics.add.collider(iceCreams, platform2);
         this.physics.add.collider(iceCreams, stoneBlock);
         this.physics.add.collider(iceCreams, stoneBlockA);
-        this.physics.add.collider(iceCreams, stoneBlockB);
-        this.physics.add.collider(iceCreams, stoneBlockC);
         this.physics.add.collider(iceCreams, movingPlatform1);
         this.physics.add.collider(iceCreams, movingPlatform2);
         this.physics.add.collider(iceCreams, movingPlatform3);
         this.physics.add.collider(iceCreams, movingPlatform4);
+
+        this.physics.add.collider(portals, platform1);
     
         this.physics.add.collider(poops, platform1);
         this.physics.add.collider(poops, platform2);
         this.physics.add.collider(poops, stoneBlock);
         this.physics.add.collider(poops, stoneBlockA);
-        this.physics.add.collider(poops, stoneBlockB);
-        this.physics.add.collider(poops, stoneBlockC);
+        this.physics.add.collider(poops, portals);
         this.physics.add.collider(poops, movingPlatform1);
         this.physics.add.collider(poops, movingPlatform2);
         this.physics.add.collider(poops, movingPlatform3);
@@ -198,7 +191,6 @@ export default class DesertScene extends Phaser.Scene {
             
         //  Checks to see if the gameState.player overlaps with any of the iceCreams, if he does call the collecticeCream function
         this.physics.add.overlap(gameState.player, iceCreams, this.collecticeCream, null, this);
-    
         this.physics.add.collider(gameState.player, poops, this.hitpoop, null, this);
     }
 
@@ -270,16 +262,26 @@ export default class DesertScene extends Phaser.Scene {
                 child.enableBody(true, child.x, 0, true, true);
     
             });
-    
-                let x = (gameState.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
     
             let poop = poops.create(x, 20, 'poop'); 
             poop.setBounce(1);
             poop.setSize(25, 23).setOffset(12, 15);
             poop.setCollideWorldBounds(true);
             poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
-            poop.allowGravity = false;
-    
+            poop.allowGravity = false;  
+        } else {
+            if (gameState.score === 60) {
+
+                let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+                let portal = portals.create(x, 30, 'portal');
+                // portal.setBounce(1);
+                // portal.setSize(25, 23).setOffset(12, 15);
+                portal.setCollideWorldBounds(true);
+                portal.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                portal.allowGravity = false;
+            }
         }
     }
 
@@ -288,7 +290,7 @@ export default class DesertScene extends Phaser.Scene {
 
         this.physics.pause();
     
-        gameState.player.setTint(0xff0000); // gives the gameState.player a red tint when hit;
+        player.setTint(0xff0000); // gives the gameState.player a red tint when hit;
         this.add.text(this.game.renderer.width / 2.5, this.game.renderer.height * 0.20, 'Game Over', { font: '30px monospace', fill: '#000000' });
         this.add.text(this.game.renderer.width / 2.5, this.game.renderer.height * 0.40, 'Click to restart', { font: '20px monospace', fill: '#000000' });
 
@@ -297,7 +299,7 @@ export default class DesertScene extends Phaser.Scene {
             this.scene.restart();
         });
 
-        gameState.player.anims.play('turn');
+        player.anims.play('turn');
     
         gameOver = true;
     }
