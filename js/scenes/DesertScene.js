@@ -6,6 +6,10 @@ let platform1;
 let platform2;
 let movingPlatform1;
 let movingPlatform2;
+let movingPlatform3;
+let movingPlatform4;
+let stoneBlock;
+let stoneBlockA;
 let cursors;
 let gameOver = false;
 let scoreText;
@@ -24,6 +28,7 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('mini', 'public/assets/tiles/mini-platform.png');
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
+        this.load.image('stone-block', 'public/assets/objects/StoneBlock.png');
         this.load.image('portal', 'public/assets/objects/portal.png');
         this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 57, frameHeight: 70 });
         this.load.audio('pickup-audio', 'public/assets/audio/pickup.mp3');
@@ -31,11 +36,10 @@ export default class DesertScene extends Phaser.Scene {
     }
 
     create () { // where to define objects;
-        //this.game.canvas.style.width = '80%';
-        // this.game.canvas.style.height = '1200px';
+        this.cameras.main.setBounds(0, 0, 1024, 2000);
 
         //  A simple background for the game
-        this.add.image(0, 0, 'desert').setOrigin(0, 0);
+        this.add.image(0, 0, 'desert').setOrigin(0).setScrollFactor(1);
     
         // adds the floor for the game;
         //  Here we create the ground. Scale it to fit the width of the game
@@ -45,19 +49,49 @@ export default class DesertScene extends Phaser.Scene {
     
     
         // adds some ledges
-        platform2 = this.physics.add.image(100, 350, 'ground').setImmovable(true); // mid ledge;
+        platform2 = this.physics.add.image(100, 350, 'ground').setImmovable(true); // 2nd ledge;
         platform2.body.setSize(275, 30).setOffset(160, 110);
         platform2.body.allowGravity = false;
     
-        movingPlatform1 = this.physics.add.image(650, 470, 'mini').setImmovable(true); // bot ledge;
+        movingPlatform1 = this.physics.add.image(650, 470, 'mini').setImmovable(true); // 3rd
         movingPlatform1.body.setSize(150, 40).setOffset(150, 194);
         movingPlatform1.body.allowGravity = false;
         movingPlatform1.setVelocityX(50);
     
-        movingPlatform2 = this.physics.add.image(780, 220, 'ground').setImmovable(true); // top ledge;
+        movingPlatform2 = this.physics.add.image(780, 220, 'ground').setImmovable(true); // 1st ledge;
         movingPlatform2.body.setSize(300, 30).setOffset(24, 110);
         movingPlatform2.body.allowGravity = false;
         movingPlatform2.setVelocityY(50);
+
+        movingPlatform3 = this.physics.add.image(650, this.game.renderer.height - 250, 'mini').setImmovable(true); // bot mini ledge;
+        movingPlatform3.body.setSize(150, 40).setOffset(150, 194);
+        movingPlatform3.body.allowGravity = false;
+        movingPlatform3.setVelocityX(50);
+
+        movingPlatform4 = this.physics.add.image(500, 800, 'mini').setImmovable(true); // 4th ledge;
+        movingPlatform4.body.setSize(150, 30).setOffset(150, 194);
+        movingPlatform4.body.allowGravity = false;
+        movingPlatform4.setVelocityY(50);
+
+        stoneBlockA = this.physics.add.image(650, this.game.renderer.height - 150, 'stone-block').setImmovable(true);
+        stoneBlockA.body.allowGravity = false;
+
+        stoneBlock = this.physics.add.image(70, this.game.renderer.height - 150, 'stone-block').setImmovable(true); // moving stone block;
+        stoneBlock.body.allowGravity = false;
+        stoneBlock.setVelocity(100, -100);
+
+        this.tweens.timeline({
+            targets: stoneBlock.body.velocity,
+            loop: -1,
+            tweens: [
+              { x:    0, y: -180, duration: 2000, ease: 'Stepped' },
+              { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
+              { x:  150, y:  80, duration: 4000, ease: 'Stepped' },
+              { x:    0, y: -200, duration: 2000, ease: 'Stepped' },
+              { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
+              { x: -150, y:  100, duration: 4000, ease: 'Stepped' }
+            ]
+        });
     
         // The player and its settings
         gameState.player = this.physics.add.sprite(150, 350, 'baby');
@@ -66,6 +100,10 @@ export default class DesertScene extends Phaser.Scene {
         //  gameState.Player physics properties. Give the little guy a slight bounce.
         gameState.player.setBounce(0.5);
         gameState.player.setCollideWorldBounds(true);
+
+        // to have the camera focus on the player;
+        this.cameras.main.startFollow(gameState.player); // .09, .09
+        this.cameras.main.setZoom(1.3);
     
         // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
@@ -120,19 +158,31 @@ export default class DesertScene extends Phaser.Scene {
         //  Collide the gameState.player and the iceCreams with the platforms
         this.physics.add.collider(gameState.player, platform1);
         this.physics.add.collider(gameState.player, platform2);
+        this.physics.add.collider(gameState.player, stoneBlock);
+        this.physics.add.collider(gameState.player, stoneBlockA);
         this.physics.add.collider(gameState.player, movingPlatform1);
         this.physics.add.collider(gameState.player, movingPlatform2);
+        this.physics.add.collider(gameState.player, movingPlatform3);
+        this.physics.add.collider(gameState.player, movingPlatform4);
         
         this.physics.add.collider(iceCreams, platform1);
         this.physics.add.collider(iceCreams, platform2);
+        this.physics.add.collider(iceCreams, stoneBlock);
+        this.physics.add.collider(iceCreams, stoneBlockA);
         this.physics.add.collider(iceCreams, movingPlatform1);
         this.physics.add.collider(iceCreams, movingPlatform2);
+        this.physics.add.collider(iceCreams, movingPlatform3);
+        this.physics.add.collider(iceCreams, movingPlatform4);
     
         this.physics.add.collider(poops, platform1);
         this.physics.add.collider(poops, platform2);
+        this.physics.add.collider(poops, stoneBlock);
+        this.physics.add.collider(poops, stoneBlockA);
         this.physics.add.collider(poops, movingPlatform1);
         this.physics.add.collider(poops, movingPlatform2);
-    
+        this.physics.add.collider(poops, movingPlatform3);
+        this.physics.add.collider(poops, movingPlatform4);
+            
         //  Checks to see if the gameState.player overlaps with any of the iceCreams, if he does call the collecticeCream function
         this.physics.add.overlap(gameState.player, iceCreams, this.collecticeCream, null, this);
     
@@ -142,10 +192,12 @@ export default class DesertScene extends Phaser.Scene {
     update () { // where the loop goes; 
         if (cursors.left.isDown) {
             gameState.player.setVelocityX(-160);
+            // gameState.player.setAngle(-90);
     
             gameState.player.anims.play('left', true);
         } else if (cursors.right.isDown) {
             gameState.player.setVelocityX(160);
+            // gameState.player.setAngle(90); // rotates the player 90 when walking right;
     
             gameState.player.anims.play('right', true);
         } else {
@@ -155,7 +207,7 @@ export default class DesertScene extends Phaser.Scene {
         }
     
         if (cursors.up.isDown && gameState.player.body.touching.down) {
-            gameState.player.setVelocityY(-360); 
+            gameState.player.setAngle(0).setVelocityY(-360); // .setAngle(-180);
         }
     
         if (movingPlatform1.x >= 700) {
@@ -166,8 +218,26 @@ export default class DesertScene extends Phaser.Scene {
     
         if (movingPlatform2.y >= 300) {
             movingPlatform2.setVelocityY(-50); 
-        } else if (movingPlatform2.y <= 200) {
+        } else if (movingPlatform2.y <= 100) {
             movingPlatform2.setVelocityY(50); 
+        }
+
+        if (movingPlatform3.x >= 700) {
+            movingPlatform3.setVelocityX(-100); 
+        } else if (movingPlatform3.x <= 300) {
+            movingPlatform3.setVelocityX(100);
+        }
+
+        if (movingPlatform4.y >= 800) {
+            movingPlatform4.setVelocityY(-90); 
+        } else if (movingPlatform4.y <= 550) {
+            movingPlatform4.setVelocityY(50); 
+        }
+
+        if (stoneBlock.y >= 300) {
+            stoneBlock.setVelocityY(-60); 
+        } else if (stoneBlock.y <= 200) {
+            stoneBlock.setVelocityY(60); 
         }
     }
 
