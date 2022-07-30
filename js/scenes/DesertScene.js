@@ -10,8 +10,6 @@ let movingPlatform3;
 let movingPlatform4;
 let stoneBlock;
 let stoneBlockA;
-let stoneBlockB;
-let stoneBlockC;
 let cursors;
 let gameOver = false;
 let scoreText;
@@ -32,9 +30,10 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('poop', '/public/assets/objects/poop.png');
         this.load.image('stone-block', 'public/assets/objects/StoneBlock.png');
         this.load.image('portal', 'public/assets/objects/portal.png');
-        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 57, frameHeight: 70 });
+        this.load.spritesheet('baby', 'public/assets/sprites/mini-naked-baby.png', { frameWidth: 37, frameHeight: 58 }); // 57, 70
         this.load.audio('pickup-audio', 'public/assets/audio/pickup.mp3');
         this.load.audio('explosion-audio', 'public/assets/audio/explosion.mp3');
+        this.load.audio('portal-audio', 'public/assets/audio/portal-audio.mp3');
     }
 
     create () { // where to define objects;
@@ -42,8 +41,8 @@ export default class DesertScene extends Phaser.Scene {
 
         //  A simple background for the game
         this.add.image(0, 0, 'desert').setOrigin(0).setScrollFactor(1);
-        // adds the floor for the game;
-        //  Here we create the ground. Scale it to fit the width of the game
+
+        // adds the floor for the game; here we create the ground. Scale it to fit the width of the game 
         platform1 = this.physics.add.image(530, this.game.renderer.height + 40 , 'ground').setScale(2).refreshBody().setImmovable(true); // floor;
         platform1.body.setSize(400, 30).setOffset(35, 110); // .setSize adjusts the size of the bounding box; .setOffset adjusts the location of the bounding box;
         platform1.body.allowGravity = false;
@@ -99,15 +98,15 @@ export default class DesertScene extends Phaser.Scene {
     
         // The player and its settings
         gameState.player = this.physics.add.sprite(20, 350, 'baby');
-        gameState.player.body.setSize(30, 35).setOffset(10, 25);
+        gameState.player.body.setSize(23, 26).setOffset(7.5, 25); // 30, 35 || 13, 28
     
         //  gameState.Player physics properties. Give the little guy a slight bounce.
         gameState.player.setBounce(0.5);
         gameState.player.setCollideWorldBounds(true);
 
         // to have the camera focus on the player;
-        // this.cameras.main.startFollow(gameState.player); // .09, .09
-        // this.cameras.main.setZoom(1);
+        this.cameras.main.startFollow(gameState.player); // .09, .09
+        this.cameras.main.setZoom(1);
     
         // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
@@ -133,6 +132,7 @@ export default class DesertScene extends Phaser.Scene {
         // sounds
         this.pickUpSound = this.sound.add("pickup-audio");
         this.explosionSound = this.sound.add("explosion-audio");
+        this.portalSound = this.sound.add("portal-audio");
     
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
@@ -178,6 +178,13 @@ export default class DesertScene extends Phaser.Scene {
         this.physics.add.collider(iceCreams, movingPlatform4);
 
         this.physics.add.collider(portals, platform1);
+        this.physics.add.collider(portals, platform2);
+        this.physics.add.collider(portals, stoneBlock);
+        this.physics.add.collider(portals, stoneBlockA);
+        this.physics.add.collider(portals, movingPlatform1);
+        this.physics.add.collider(portals, movingPlatform2);
+        this.physics.add.collider(portals, movingPlatform3);
+        this.physics.add.collider(portals, movingPlatform4);
     
         this.physics.add.collider(poops, platform1);
         this.physics.add.collider(poops, platform2);
@@ -192,6 +199,7 @@ export default class DesertScene extends Phaser.Scene {
         //  Checks to see if the gameState.player overlaps with any of the iceCreams, if he does call the collecticeCream function
         this.physics.add.overlap(gameState.player, iceCreams, this.collecticeCream, null, this);
         this.physics.add.collider(gameState.player, poops, this.hitpoop, null, this);
+        this.physics.add.collider(gameState.player, portals, this.hitPortal, null, this);
     }
 
     update () { // where the loop goes; 
@@ -271,18 +279,25 @@ export default class DesertScene extends Phaser.Scene {
             poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
             poop.allowGravity = false;  
         } else {
-            if (gameState.score === 60) {
+            if (gameState.score === 20) {
 
                 let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
                 let portal = portals.create(x, 30, 'portal');
-                // portal.setBounce(1);
-                // portal.setSize(25, 23).setOffset(12, 15);
-                portal.setCollideWorldBounds(true);
+                portal.setSize(150, 135).setOffset(30, 50);
                 portal.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                portal.setCollideWorldBounds(true);
                 portal.allowGravity = false;
             }
         }
+    }
+
+    hitPortal = (player, portal) => {
+        this.portalSound.play();
+        player.setTint(0x00ff00);
+        this.scene.start('CaveScene');
+
+        player.setScale
     }
 
     hitpoop = (player, poop) => {

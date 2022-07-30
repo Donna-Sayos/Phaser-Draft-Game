@@ -15,6 +15,7 @@ export default class StartScene extends Phaser.Scene {
     }
 
     create () {
+        // to have a fade effect when entering the scene;
         this.cameras.main.fadeFrom(2000, Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255));
 
         this.add.image(0, 0, 'background').setOrigin(0);
