@@ -10,6 +10,8 @@ let movingPlatform3;
 let movingPlatform4;
 let stoneBlock;
 let stoneBlockA;
+let stoneBlockB;
+let stoneBlockC;
 let cursors;
 let gameOver = false;
 let scoreText;
@@ -40,7 +42,6 @@ export default class DesertScene extends Phaser.Scene {
 
         //  A simple background for the game
         this.add.image(0, 0, 'desert').setOrigin(0).setScrollFactor(1);
-    
         // adds the floor for the game;
         //  Here we create the ground. Scale it to fit the width of the game
         platform1 = this.physics.add.image(530, this.game.renderer.height + 40 , 'ground').setScale(2).refreshBody().setImmovable(true); // floor;
@@ -73,8 +74,14 @@ export default class DesertScene extends Phaser.Scene {
         movingPlatform4.body.allowGravity = false;
         movingPlatform4.setVelocityY(50);
 
-        stoneBlockA = this.physics.add.image(650, this.game.renderer.height - 150, 'stone-block').setImmovable(true);
+        stoneBlockA = this.physics.add.image(650, this.game.renderer.height - 150, 'stone-block').setImmovable(true); // mid;
         stoneBlockA.body.allowGravity = false;
+
+        stoneBlockB = this.physics.add.image(730, this.game.renderer.height - 400, 'stone-block').setImmovable(true); // right;
+        stoneBlockB.body.allowGravity = false;
+
+        stoneBlockC = this.physics.add.image(150, this.game.renderer.height - 300, 'stone-block').setImmovable(true); // left;
+        stoneBlockC.body.allowGravity = false;
 
         stoneBlock = this.physics.add.image(70, this.game.renderer.height - 150, 'stone-block').setImmovable(true); // moving stone block;
         stoneBlock.body.allowGravity = false;
@@ -87,14 +94,14 @@ export default class DesertScene extends Phaser.Scene {
               { x:    0, y: -180, duration: 2000, ease: 'Stepped' },
               { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
               { x:  150, y:  80, duration: 4000, ease: 'Stepped' },
-              { x:    0, y: -200, duration: 2000, ease: 'Stepped' },
+              { x:    0, y: -180, duration: 2000, ease: 'Stepped' },
               { x:    0, y:    0, duration: 1000, ease: 'Stepped' },
               { x: -150, y:  100, duration: 4000, ease: 'Stepped' }
             ]
         });
     
         // The player and its settings
-        gameState.player = this.physics.add.sprite(150, 350, 'baby');
+        gameState.player = this.physics.add.sprite(20, 350, 'baby');
         gameState.player.body.setSize(30, 35).setOffset(10, 25);
     
         //  gameState.Player physics properties. Give the little guy a slight bounce.
@@ -103,7 +110,7 @@ export default class DesertScene extends Phaser.Scene {
 
         // to have the camera focus on the player;
         this.cameras.main.startFollow(gameState.player); // .09, .09
-        this.cameras.main.setZoom(1.3);
+        this.cameras.main.setZoom(1);
     
         // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
@@ -133,12 +140,11 @@ export default class DesertScene extends Phaser.Scene {
         //  Input Events
         cursors = this.input.keyboard.createCursorKeys();
     
-        //  Some iceCreams to collect, 14 in total, evenly spaced 70 pixels apart along the x axis
-        
+        //  Some iceCreams to collect, 15 in total, evenly spaced 70 pixels apart along the x axis
         iceCreams = this.physics.add.group({
             key: 'iceCream',
-            repeat: 13,
-            setXY: { x: 12, y: 0, stepX: 58 }
+            repeat: 14,
+            setXY: { x: 12, y: 0, stepX: 55 }
         });
         
     
@@ -153,13 +159,16 @@ export default class DesertScene extends Phaser.Scene {
         portal = this.physics.add.group();
     
         //  The score
-        gameState.scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '32px', fill: '#000' });
+        gameState.scoreText = this.add.text(14, 14, 'score: 0', { fontSize: '40px', fill: '#000' });
+       
     
         //  Collide the gameState.player and the iceCreams with the platforms
         this.physics.add.collider(gameState.player, platform1);
         this.physics.add.collider(gameState.player, platform2);
         this.physics.add.collider(gameState.player, stoneBlock);
         this.physics.add.collider(gameState.player, stoneBlockA);
+        this.physics.add.collider(gameState.player, stoneBlockB);
+        this.physics.add.collider(gameState.player, stoneBlockC);
         this.physics.add.collider(gameState.player, movingPlatform1);
         this.physics.add.collider(gameState.player, movingPlatform2);
         this.physics.add.collider(gameState.player, movingPlatform3);
@@ -169,6 +178,8 @@ export default class DesertScene extends Phaser.Scene {
         this.physics.add.collider(iceCreams, platform2);
         this.physics.add.collider(iceCreams, stoneBlock);
         this.physics.add.collider(iceCreams, stoneBlockA);
+        this.physics.add.collider(iceCreams, stoneBlockB);
+        this.physics.add.collider(iceCreams, stoneBlockC);
         this.physics.add.collider(iceCreams, movingPlatform1);
         this.physics.add.collider(iceCreams, movingPlatform2);
         this.physics.add.collider(iceCreams, movingPlatform3);
@@ -178,6 +189,8 @@ export default class DesertScene extends Phaser.Scene {
         this.physics.add.collider(poops, platform2);
         this.physics.add.collider(poops, stoneBlock);
         this.physics.add.collider(poops, stoneBlockA);
+        this.physics.add.collider(poops, stoneBlockB);
+        this.physics.add.collider(poops, stoneBlockC);
         this.physics.add.collider(poops, movingPlatform1);
         this.physics.add.collider(poops, movingPlatform2);
         this.physics.add.collider(poops, movingPlatform3);
