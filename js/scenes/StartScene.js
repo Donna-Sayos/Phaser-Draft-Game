@@ -4,7 +4,7 @@ export default class StartScene extends Phaser.Scene {
     }
 
     preload () {
-        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
+        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 57, frameHeight: 65 });
         this.load.image('background', 'public/assets/bg/desert.png');
         this.load.image('play-button', 'public/assets/objects/play_button.png');
         this.load.audio('music', 'public/assets/audio/chill-music.mp3');

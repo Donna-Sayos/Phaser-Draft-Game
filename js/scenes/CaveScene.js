@@ -15,7 +15,6 @@ export default class CaveScene extends Phaser.Scene {
 
         player = this.physics.add.sprite(300, 350, 'baby');
         player.body.setSize(20, 25).setOffset(9, 19);
-    
         player.setCollideWorldBounds(true);
     }
 };

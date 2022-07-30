@@ -94,7 +94,7 @@ export default class LoadScene extends Phaser.Scene {
     }
 
     create () {
-        this.add.image(400, 300, 'lol');
+        this.add.image(400, 550, 'lol');
         setTimeout(() => {
             this.scene.start("StartScene");
         }, 800);

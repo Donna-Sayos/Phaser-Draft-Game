@@ -25,20 +25,22 @@ export default class DesertScene extends Phaser.Scene {
         this.load.image('iceCream', 'public/assets/objects/iceCream.png');
         this.load.image('poop', '/public/assets/objects/poop.png');
         this.load.image('portal', 'public/assets/objects/portal.png');
-        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
+        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 57, frameHeight: 70 });
         this.load.audio('pickup-audio', 'public/assets/audio/pickup.mp3');
         this.load.audio('explosion-audio', 'public/assets/audio/explosion.mp3');
     }
 
     create () { // where to define objects;
+        //this.game.canvas.style.width = '80%';
+        // this.game.canvas.style.height = '1200px';
 
         //  A simple background for the game
         this.add.image(0, 0, 'desert').setOrigin(0, 0);
     
         // adds the floor for the game;
         //  Here we create the ground. Scale it to fit the width of the game
-        platform1 = this.physics.add.image(530, 650, 'ground').setScale(2).refreshBody().setImmovable(true);
-        platform1.body.setSize(400, 60).setOffset(35, 110); // .setSize adjusts the size of the bounding box; .setOffset adjusts the location of the bounding box;
+        platform1 = this.physics.add.image(530, this.game.renderer.height + 40 , 'ground').setScale(2).refreshBody().setImmovable(true); // floor;
+        platform1.body.setSize(400, 30).setOffset(35, 110); // .setSize adjusts the size of the bounding box; .setOffset adjusts the location of the bounding box;
         platform1.body.allowGravity = false;
     
     

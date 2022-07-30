@@ -8,12 +8,13 @@ const config = {
     pixelArt: true,
     title: 'Survive Deeznuts',
     scale: {
+        // mode: Phaser.Scale.EXACT_FIT,
         parent: 'game-container',
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        zoom: 1
+        // zoom: 2
     },
-    width: 800,
-    height: 1120,
+    width: 800, // 800
+    height: 1120, // 600 || 1120
     physics: {
         default: 'arcade',
         arcade: {
@@ -24,8 +25,8 @@ const config = {
     scene: [
         // LoadScene,
         // StartScene,
-        // DesertScene,
-        CaveScene
+        DesertScene,
+        //CaveScene
     ]
 };
 
