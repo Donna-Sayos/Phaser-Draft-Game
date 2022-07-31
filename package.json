@@ -4,6 +4,7 @@
   "description": "some of my shinanigans",
   "main": "index.js",
   "scripts": {
+    "heroku-postbuild": "npm run build",
     "build": "webpack",
     "build:dev": "npm run build -- --watch --mode=development",
     "start": "node server.js --port=$PORT --disable-host-check"

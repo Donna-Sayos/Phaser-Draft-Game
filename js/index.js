@@ -22,11 +22,11 @@ const config = {
         },
     },
     scene: [
-        LoadScene,
-        StartScene,
-        DesertScene,
-        ToBeContinued,
-        //CaveScene
+        // LoadScene,
+        // StartScene,
+         DesertScene,
+        // ToBeContinued,
+         CaveScene
     ]
 };
 
