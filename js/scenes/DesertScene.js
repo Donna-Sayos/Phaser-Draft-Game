@@ -106,7 +106,7 @@ export default class DesertScene extends Phaser.Scene {
 
         // to have the camera focus on the player;
         this.cameras.main.startFollow(gameState.player); // .09, .09
-        this.cameras.main.setZoom(1.4);
+        this.cameras.main.setZoom(1.2);
         this.cameras.main.roundPixels = true;
     
         // gameState.player animations, turning, walking left and walking right.
@@ -261,10 +261,10 @@ export default class DesertScene extends Phaser.Scene {
         this.pickUpSound.play();
     
         //  Add and update the score
-        gameState.score += 20;
+        gameState.score += 10;
         gameState.scoreText.setText(`score: ${gameState.score}`);
     
-        if (iceCreams.countActive(true) === 6) {
+        if (iceCreams.countActive(true) === 5) {
             //  A new batch of iceCreams to collect
             iceCreams.children.iterate(function (child) {
     
