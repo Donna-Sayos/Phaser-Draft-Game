@@ -106,7 +106,8 @@ export default class DesertScene extends Phaser.Scene {
 
         // to have the camera focus on the player;
         this.cameras.main.startFollow(gameState.player); // .09, .09
-        this.cameras.main.setZoom(1);
+        this.cameras.main.setZoom(1.4);
+        this.cameras.main.roundPixels = true;
     
         // gameState.player animations, turning, walking left and walking right.
         this.anims.create({
@@ -284,7 +285,7 @@ export default class DesertScene extends Phaser.Scene {
                 let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
                 let portal = portals.create(x, 30, 'portal');
-                portal.setSize(150, 135).setOffset(30, 50);
+                portal.setSize(100, 100).setOffset(17, 19);
                 portal.setVelocity(Phaser.Math.Between(-200, 200), 20);
                 portal.setCollideWorldBounds(true);
                 portal.allowGravity = false;
@@ -295,7 +296,7 @@ export default class DesertScene extends Phaser.Scene {
     hitPortal = (player, portal) => {
         this.portalSound.play();
         player.setTint(0x00ff00);
-        this.scene.start('CaveScene');
+        this.scene.start('ToBeContinued');
 
         player.setScale
     }

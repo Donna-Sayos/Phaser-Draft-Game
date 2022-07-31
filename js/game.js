@@ -2,6 +2,7 @@ import CaveScene from "./scenes/CaveScene.js";
 import DesertScene from "./scenes/DesertScene.js";
 import LoadScene from "./scenes/loadScene.js";
 import StartScene from "./scenes/StartScene.js";
+import ToBeContinued from "./scenes/ToBeContinued.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -9,8 +10,7 @@ const config = {
     title: 'Survive Deeznuts',
     scale: {
         parent: 'game-container',
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     width: 800, 
     height: 1120, 
@@ -18,14 +18,15 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 300 }, 
-            debug: false,
+            debug: true,
         },
     },
     scene: [
-        // LoadScene,
-        // StartScene,
+        LoadScene,
+        StartScene,
         DesertScene,
-        CaveScene
+        ToBeContinued,
+        //CaveScene
     ]
 };
 

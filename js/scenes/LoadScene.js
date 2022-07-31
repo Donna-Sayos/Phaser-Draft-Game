@@ -16,7 +16,7 @@ export default class LoadScene extends Phaser.Scene {
     }
 
     preload () {
-        this.load.spritesheet('baby', 'public/assets/sprites/naked-baby.png', { frameWidth: 50, frameHeight: 67 });
+        this.load.spritesheet('baby', 'public/assets/sprites/mini-naked-baby.png', { frameWidth: 37, frameHeight: 58 });
         this.load.image('ground', 'public/assets/tiles/desert-platform.png');
         this.load.image('lol', 'public/assets/objects/lol.png');
 
