@@ -20,7 +20,11 @@ export default class ToBeContinued extends Phaser.Scene {
             let trollFace = this.physics.add.image(0, 0, 'troll').setOrigin(0);
             trollFace.setCollideWorldBounds(true);
             trollFace.body.allowGravity = false;
-        }, 3000);
+
+            setTimeout(() => {
+                this.scene.start("StartScene");
+            }, 2000);
+        }, 2000);
 
         // this.keys = this.input.keyboard.addKeys({
         //     s:  Phaser.Input.Keyboard.KeyCodes.S,

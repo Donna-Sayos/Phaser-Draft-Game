@@ -280,7 +280,7 @@ export default class DesertScene extends Phaser.Scene {
             poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
             poop.allowGravity = false;  
         } else {
-            if (gameState.score === 20) {
+            if (gameState.score === 600) {
 
                 let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
