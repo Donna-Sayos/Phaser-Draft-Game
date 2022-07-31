@@ -1,13 +1,15 @@
-const path = require('path');
-
 module.exports = {
-  entry: 'js/index.js',
+  entry: './js/index.js',
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: __dirname,
+    filename: './public/bundle.js',
   },
+  devtool: 'source-map',
   module: {
     rules: [
+        {
+            exclude: /node_modules/,
+        }
     ],
   },
 };

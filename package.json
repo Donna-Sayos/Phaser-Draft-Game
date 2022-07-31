@@ -1,14 +1,13 @@
 {
   "name": "phaser-draft-game",
   "version": "1.0.0",
-  "description": "",
+  "description": "some of my shinanigans",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "build:dev": "npm run build -- --watch --mode=development",
-    "start": "node server.js"
+    "start": "node server.js --port=$PORT --disable-host-check"
   },
-  "heroku-run-build-script": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Donna-Sayos/Phaser-Draft-Game.git"
@@ -22,13 +21,15 @@
   "homepage": "https://github.com/Donna-Sayos/Phaser-Draft-Game#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "morgan": "^1.10.0",
     "phaser": "^3.55.2"
   },
   "devDependencies": {
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
   },
+  "heroku-run-build-script": true,
   "engines": {
-    "node": "8.11.0"
+    "node": "18.7.0"
   }
 }
