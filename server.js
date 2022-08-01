@@ -11,14 +11,12 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // static file-serving middleware
-app.use(express.static(path.join(__dirname, './index.html')));
+app.use(express.static(path.join(__dirname, 'index.html')));
 
-// sends index.html
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '..', './index.html'));
-// });
-
-// app.use(express.static(path.join(__dirname, './dist')));
+// we will send the index.html!
+app.get('/*', (req, res, next) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // error handling endware
 app.use((err, req, res, next) => {

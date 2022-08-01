@@ -264,7 +264,7 @@ export default class DesertScene extends Phaser.Scene {
         gameState.score += 10;
         gameState.scoreText.setText(`score: ${gameState.score}`);
     
-        if (iceCreams.countActive(true) === 5) {
+        if (iceCreams.countActive(true) === 4) {
             //  A new batch of iceCreams to collect
             iceCreams.children.iterate(function (child) {
     
@@ -280,7 +280,7 @@ export default class DesertScene extends Phaser.Scene {
             poop.setVelocity(Phaser.Math.Between(-200, 200), 20);
             poop.allowGravity = false;  
         } else {
-            if (gameState.score === 10) {
+            if (gameState.score === 600) {
 
                 let x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 

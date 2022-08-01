@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "heroku-postbuild": "npm run start",
-    "build": "webpack",
+    "start": "npm run build:dev & npm run start-server",
+    "build": "webpack -w",
     "build:dev": "npm run build -- --watch --mode=development",
-    "start": "node server.js --port=$PORT --disable-host-check"
+    "start-server": "nodemon server.js --port=$PORT --disable-host-check"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "phaser": "^3.55.2"
   },
   "devDependencies": {
+    "nodemon": "^2.0.19",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
   },
