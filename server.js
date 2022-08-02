@@ -25,12 +25,8 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.message || 'Internal server error.')
 });
 
-dom.window.gameLoaded = () => {
-  let port = process.env.PORT;
-  if (port == null || port == "") {
-    port = process.env.PORT || 8080;
-  }
-  app.listen(port, function () {
-    console.log(`Listening on ${server.address().port}`);
-  });
-};
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+    console.log(`app is listening to port ${PORT}...`);
+});
