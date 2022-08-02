@@ -8,7 +8,7 @@
     "start": "npm run build:dev & npm run start-server",
     "build": "webpack -w",
     "build:dev": "npm run build -- --watch --mode=development",
-    "start-server": "nodemon server.js --port=$PORT --disable-host-check"
+    "start-server": "nodemon server --port=$PORT --disable-host-check -e html,js,scss --ignore public --ignore js"
   },
   "repository": {
     "type": "git",
