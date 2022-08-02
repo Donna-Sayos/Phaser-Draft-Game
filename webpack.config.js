@@ -9,7 +9,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      components: path.resolve(__dirname, 'js/scenes'),
+      components: path.resolve(__dirname, './js/scenes'),
     },
     extensions: ['.js'],
   },
